@@ -1,0 +1,6 @@
+@FancyFinanceWebAPI_HostAddress = http://localhost:5207
+
+GET {{FancyFinanceWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
