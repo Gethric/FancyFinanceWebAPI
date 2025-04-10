@@ -9,5 +9,11 @@ namespace FancyFinanceWebAPI.Data
             : base(options) { }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Currency> Currency { get; set; }
+
+        public DbSet<Frequency> Frequency { get; set; }
     }
 }
