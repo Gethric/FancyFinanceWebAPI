@@ -12,8 +12,8 @@ namespace FancyFinanceWebAPI.Data
 
         public DbSet<Category> Categories { get; set; }
 
-        public DbSet<Currency> Currency { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
 
-        public DbSet<Frequency> Frequency { get; set; }
+        public DbSet<Frequency> Frequencies { get; set; }
     }
 }

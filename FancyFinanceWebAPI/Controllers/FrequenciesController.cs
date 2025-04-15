@@ -1,7 +1,7 @@
 ﻿using FancyFinanceWebAPI.Data;
 using FancyFinanceWebAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -10,53 +10,53 @@ namespace FancyFinanceWebAPI.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CategoriesController : ControllerBase
+    public class FrequenciesController : ControllerBase
     {
         private readonly FancyFinanceDbContext _context;
 
-        public CategoriesController(FancyFinanceDbContext context)
+        public FrequenciesController(FancyFinanceDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<Frequency>>> GetFrequencies()
         {
-            return await _context.Categories
-                .OrderBy(c => c.CategoryName)
+            return await _context.Frequencies
+                .OrderBy(c => c.FrequencyName)
                 .ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetSelectedCategory([FromRoute] int id)
+        public async Task<ActionResult<Frequency>> GetSelectedFrequency([FromRoute] int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var frequency = await _context.Frequencies.FindAsync(id);
 
-            if (category == null)
+            if (frequency == null)
             {
                 return NotFound();
             }
 
-            return Ok(category);      
+            return Ok(frequency);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> CreateCategory([FromBody] Category category)
+        public async Task<ActionResult<Frequency>> CreateFrequency([FromBody] Frequency frequency)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
 
-            category.CreatedBy = Guid.Parse(userId);
-            _context.Categories.Add(category);
+            frequency.CreatedBy = Guid.Parse(userId);
+            _context.Frequencies.Add(frequency);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetSelectedCategory), new { id = category.CategoryId }, category );
+            return CreatedAtAction(nameof(GetSelectedFrequency), new { id = frequency.FrequencyId }, frequency);
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<Category>> UpdateCategory(int id, [FromBody] Category patch)
+        public async Task<ActionResult<Frequency>> UpdateFrequency(int id, [FromBody] Frequency patch)
         {
-            var existing = await _context.Categories.FindAsync(id);
+            var existing = await _context.Frequencies.FindAsync(id);
             if (existing == null)
                 return NotFound();
 
@@ -65,12 +65,12 @@ namespace FancyFinanceWebAPI.Controllers
                 return Unauthorized();
 
             // ID check just to be safe (optional)
-            if (patch.CategoryId != 0 && patch.CategoryId != id)
-                return BadRequest("CategoryId cannot be changed");
+            if (patch.FrequencyId != 0 && patch.FrequencyId != id)
+                return BadRequest("FrequencyId cannot be changed");
 
             // Only update allowed fields
-            if (!string.IsNullOrWhiteSpace(patch.CategoryName))
-                existing.CategoryName = patch.CategoryName;
+            if (!string.IsNullOrWhiteSpace(patch.FrequencyName))
+                existing.FrequencyName = patch.FrequencyName;
 
             if (patch.UpdatedAt != default)
                 existing.UpdatedAt = DateTime.UtcNow;
@@ -84,11 +84,11 @@ namespace FancyFinanceWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var frequency = await _context.Frequencies.FindAsync(id);
+            if (frequency == null)
                 return NotFound();
 
-            _context.Categories.Remove(category);
+            _context.Frequencies.Remove(frequency);
             await _context.SaveChangesAsync();
 
             return NoContent();

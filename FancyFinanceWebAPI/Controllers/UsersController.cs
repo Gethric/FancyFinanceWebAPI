@@ -56,7 +56,16 @@ namespace FancyFinanceWebAPI.Controllers
                 return Unauthorized("Invalid email or password");
 
             var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            return Ok(new { token,
+                user = new
+                {
+                    user.Id,
+                    user.Email,
+                    user.Username,
+                    user.FirstName,
+                    user.LastName
+                }
+            });
         }
 
         [Authorize]
