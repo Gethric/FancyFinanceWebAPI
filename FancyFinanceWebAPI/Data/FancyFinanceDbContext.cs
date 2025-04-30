@@ -1,5 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FancyFinanceWebAPI.Models;
+using FancyFinanceWebAPI.Modules.Users;
+using FancyFinanceWebAPI.Modules.Incomes;
+using FancyFinanceWebAPI.Modules.Expenses;
+using FancyFinanceWebAPI.Shared.Category;
+using FancyFinanceWebAPI.Shared.Currency;
+using FancyFinanceWebAPI.Shared.Frequency;
 
 namespace FancyFinanceWebAPI.Data
 {
@@ -15,5 +20,9 @@ namespace FancyFinanceWebAPI.Data
         public DbSet<Currency> Currencies { get; set; }
 
         public DbSet<Frequency> Frequencies { get; set; }
+
+        public DbSet<Income> Incomes { get; set; }
+
+        public DbSet<Expense> Expenses { get; set; }
     }
 }

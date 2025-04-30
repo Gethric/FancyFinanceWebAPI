@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FancyFinanceWebAPI.Models
+namespace FancyFinanceWebAPI.Shared.Currency
 {
     [Table("currencies")]
     public class Currency

@@ -1,11 +1,10 @@
 ﻿using FancyFinanceWebAPI.Data;
-using FancyFinanceWebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace FancyFinanceWebAPI.Controllers
+namespace FancyFinanceWebAPI.Shared.Frequency
 {
     [Authorize]
     [ApiController]

@@ -1,4 +1,4 @@
-﻿namespace FancyFinanceWebAPI.Models
+﻿namespace FancyFinanceWebAPI.Modules.Auth
 {
     public class LoginRequest
     {

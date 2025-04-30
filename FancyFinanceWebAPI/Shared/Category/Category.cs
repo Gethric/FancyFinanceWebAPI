@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FancyFinanceWebAPI.Models
+namespace FancyFinanceWebAPI.Shared.Category
 {
-    [Table("frequencies")]
-    public class Frequency
+    [Table("categories")]
+    public class Category
     {
         [Key]
-        [Column("frequency_id")]
-        public int FrequencyId { get; set; }
+        [Column("category_id")]
+        public int CategoryId { get; set; }
 
         [Required]
-        [Column("frequency_name")]
-        public string FrequencyName { get; set; } = string.Empty;
+        [Column("category_name")]
+        public string CategoryName { get; set; } = string.Empty;
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

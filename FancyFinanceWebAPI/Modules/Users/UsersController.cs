@@ -1,5 +1,4 @@
 ﻿using FancyFinanceWebAPI.Data;
-using FancyFinanceWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -7,8 +6,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using FancyFinanceWebAPI.Modules.Auth;
 
-namespace FancyFinanceWebAPI.Controllers
+namespace FancyFinanceWebAPI.Modules.Users
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -42,7 +42,7 @@ namespace FancyFinanceWebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] Models.LoginRequest request)
+        public IActionResult Login([FromBody] LoginRequest request)
         {
             var user = _context.Users.SingleOrDefault(u => u.Email == request.Email);
 
