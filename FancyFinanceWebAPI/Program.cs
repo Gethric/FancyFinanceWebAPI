@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using FancyFinanceWebAPI.Modules.Incomes;
+using FancyFinanceWebAPI.Modules.Auth;
+using FancyFinanceWebAPI.Modules.Expenses;
 
 
 
@@ -54,6 +57,13 @@ builder.Services.AddSwaggerGen(c =>
 // Register PostgreSQL DbContext
 builder.Services.AddDbContext<FancyFinanceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register application modules
+builder.Services
+    .AddIncomeModule()
+    .AddAuthModule()
+    .AddExpenseModule();
+
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key not found");
