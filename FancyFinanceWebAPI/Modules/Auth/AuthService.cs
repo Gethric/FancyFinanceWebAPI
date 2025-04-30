@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FancyFinanceWebAPI.Modules.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,25 +10,33 @@ namespace FancyFinanceWebAPI.Modules.Auth;
 
 public class AuthService : IAuthService
 {
+    private readonly IUserService _userService;
     private readonly IConfiguration _config;
+    private readonly IPasswordHasher<User> _passwordHasher;
 
-    public AuthService(IConfiguration config)
+    public AuthService(IUserService userService, IConfiguration config, IPasswordHasher<User> passwordHasher)
     {
+        _userService = userService;
         _config = config;
+        _passwordHasher = passwordHasher;
     }
 
-    public Task<LoginResponse> LoginAsync(LoginRequest request)
+    public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        // For demo purposes only — replace with real user validation logic
-        if (request.Email != "test@example.com" || request.Password != "password")
+        var user = await _userService.GetByEmailAsync(request.Email);
+        if (user == null)
         {
-            return Task.FromResult<LoginResponse>(null);
+            return null;
         }
+
+        var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
+        if (result != PasswordVerificationResult.Success)
+            return null;
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, request.Email),
-            new Claim(ClaimTypes.Email, request.Email),
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimTypes.Email, user.Email)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
@@ -42,6 +52,6 @@ public class AuthService : IAuthService
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return Task.FromResult(new LoginResponse { Token = jwt });
+        return new LoginResponse { Token = jwt };
     }
 }

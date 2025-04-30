@@ -15,7 +15,7 @@ namespace FancyFinanceWebAPI.Modules.Incomes
 
         [Required]
         [Column("user_id")]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [ForeignKey("UserId")]
         public User? User { get; set; }

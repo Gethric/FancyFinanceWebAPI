@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using FancyFinanceWebAPI.Modules.Incomes;
 using FancyFinanceWebAPI.Modules.Auth;
 using FancyFinanceWebAPI.Modules.Expenses;
+using FancyFinanceWebAPI.Modules.Users;
+using Microsoft.AspNetCore.Identity;
 
 
 
@@ -58,10 +60,15 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<FancyFinanceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register password hasher
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
 // Register application modules
 builder.Services
-    .AddIncomeModule()
+    .AddUserModule()
     .AddAuthModule()
+    .AddIncomeModule()
     .AddExpenseModule();
 
 

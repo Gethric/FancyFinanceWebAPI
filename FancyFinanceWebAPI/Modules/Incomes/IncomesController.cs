@@ -20,7 +20,7 @@ namespace FancyFinanceWebAPI.Modules.Incomes
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<Income>>> GetUserIncomes([FromRoute] int userId)
+        public async Task<ActionResult<IEnumerable<Income>>> GetUserIncomes([FromRoute] Guid userId)
         {
             return await _context.Incomes
                 .Where(i => i.UserId == userId)
