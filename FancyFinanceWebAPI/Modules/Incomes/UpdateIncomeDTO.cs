@@ -1,6 +1,6 @@
 ﻿namespace FancyFinanceWebAPI.Modules.Incomes
 {
-    public class CreateIncomeDTO
+    public class UpdateIncomeDTO
     {
         public string IncomeSource { get; set; } = string.Empty;
         public decimal Amount { get; set; }

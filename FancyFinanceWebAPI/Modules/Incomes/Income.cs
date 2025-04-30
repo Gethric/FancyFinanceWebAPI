@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FancyFinanceWebAPI.Modules.Incomes
 {
-    [Table("Incomes")]
+    [Table("incomes")]
     public class Income
     {
         [Key]
