@@ -22,7 +22,7 @@ namespace FancyFinanceWebAPI.Shared.Category
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
             return await _context.Categories
-                .OrderBy(c => c.CategoryName)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
         }
 
@@ -68,8 +68,8 @@ namespace FancyFinanceWebAPI.Shared.Category
                 return BadRequest("CategoryId cannot be changed");
 
             // Only update allowed fields
-            if (!string.IsNullOrWhiteSpace(patch.CategoryName))
-                existing.CategoryName = patch.CategoryName;
+            if (!string.IsNullOrWhiteSpace(patch.Name))
+                existing.Name = patch.Name;
 
             if (patch.UpdatedAt != default)
                 existing.UpdatedAt = DateTime.UtcNow;

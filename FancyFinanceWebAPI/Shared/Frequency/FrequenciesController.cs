@@ -22,7 +22,7 @@ namespace FancyFinanceWebAPI.Shared.Frequency
         public async Task<ActionResult<IEnumerable<Frequency>>> GetFrequencies()
         {
             return await _context.Frequencies
-                .OrderBy(c => c.FrequencyName)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
         }
 
@@ -68,8 +68,8 @@ namespace FancyFinanceWebAPI.Shared.Frequency
                 return BadRequest("FrequencyId cannot be changed");
 
             // Only update allowed fields
-            if (!string.IsNullOrWhiteSpace(patch.FrequencyName))
-                existing.FrequencyName = patch.FrequencyName;
+            if (!string.IsNullOrWhiteSpace(patch.Name))
+                existing.Name = patch.Name;
 
             if (patch.UpdatedAt != default)
                 existing.UpdatedAt = DateTime.UtcNow;

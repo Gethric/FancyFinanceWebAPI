@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FancyFinanceWebAPI.Modules.Auth;
 
@@ -22,4 +23,17 @@ public class AuthController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPost("validate")]
+    public IActionResult ValidateToken()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null)
+            return Unauthorized();
+
+        // Optional: regenerate token here (if you're doing refresh logic)
+        // For now, just return 200 OK to indicate token is valid
+        return Ok(new { valid = true });
+    }
+
 }

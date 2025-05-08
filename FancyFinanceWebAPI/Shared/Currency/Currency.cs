@@ -12,7 +12,7 @@ namespace FancyFinanceWebAPI.Shared.Currency
 
         [Required]
         [Column("currency_name")]
-        public string CurrencyName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [Column("iso_code")]

@@ -22,7 +22,7 @@ namespace FancyFinanceWebAPI.Shared.Currency
         public async Task<ActionResult<IEnumerable<Currency>>> GetCurrencies()
         {
             return await _context.Currencies
-                .OrderBy(c => c.CurrencyName)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
         }
 
@@ -69,8 +69,8 @@ namespace FancyFinanceWebAPI.Shared.Currency
                 return BadRequest("CurrencyId cannot be changed");
 
             // Only update allowed fields
-            if (!string.IsNullOrWhiteSpace(patch.CurrencyName))
-                existing.CurrencyName = patch.CurrencyName;
+            if (!string.IsNullOrWhiteSpace(patch.Name))
+                existing.Name = patch.Name;
 
             if (patch.UpdatedAt != default)
                 existing.UpdatedAt = DateTime.UtcNow;

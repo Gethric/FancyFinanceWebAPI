@@ -29,5 +29,8 @@ namespace FancyFinanceWebAPI.Modules.Users
 
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
+
+        [Column("is_admin")]
+        public bool IsAdmin { get; set; } = false;
     }
 }

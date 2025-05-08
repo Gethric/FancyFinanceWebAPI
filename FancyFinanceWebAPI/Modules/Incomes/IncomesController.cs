@@ -12,15 +12,15 @@ namespace FancyFinanceWebAPI.Modules.Incomes
     [Route("api/[controller]")]
     public class IncomesController : ControllerBase
     {
-        private readonly FancyFinanceDbContext _context;
+        private readonly IIncomeService _service;
 
-        public IncomesController(FancyFinanceDbContext context)
+        public IncomesController(IIncomeService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpPost]
-        public async Task<ActionResult<IncomeDTO>> CreateIncome([FromBody] CreateIncomeDTO dto)
+        public async Task<ActionResult<Income>> CreateIncome([FromBody] CreateIncomeDTO dto)
         {
             var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -28,19 +28,7 @@ namespace FancyFinanceWebAPI.Modules.Incomes
 
             var userId = Guid.Parse(userIdStr);
 
-            var income = new Income
-            {
-                IncomeSource = dto.IncomeSource,
-                Amount = dto.Amount,
-                CurrencyId = dto.CurrencyId,
-                FrequencyId = dto.FrequencyId,
-                UserId = userId,
-                CreatedBy = userId,
-                UpdatedBy = userId
-            };
-
-            _context.Incomes.Add(income);
-            await _context.SaveChangesAsync();
+            var income = await _service.CreateIncome(dto, userId);
 
             return CreatedAtAction(nameof(GetIncomeById), new { id = income.IncomeId }, income);
         }
@@ -48,79 +36,53 @@ namespace FancyFinanceWebAPI.Modules.Incomes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Income>>> GetUserIncomes()
         {
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdStr == null) return Unauthorized();
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
 
-            var userId = Guid.Parse(userIdStr);
-
-            var incomes = await _context.Incomes
-                .Where(i => i.UserId == userId)
-                .Include(i => i.Currency)
-                .Include(i => i.Frequency)
-                .OrderBy(i => i.IncomeSource)
-                .ToListAsync();
-
+            var incomes = await _service.GetUserIncomes(userId.Value);
             return Ok(incomes);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Income>> GetIncomeById([FromRoute] int id)
+        public async Task<ActionResult<Income>> GetIncomeById(int id)
         {
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdStr == null) return Unauthorized();
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
 
-            var userId = Guid.Parse(userIdStr);
-
-            var income = await _context.Incomes
-                .Include(i => i.Currency)
-                .Include(i => i.Frequency)
-                .FirstOrDefaultAsync(i => i.IncomeId == id && i.UserId == userId);
-
-            if (income == null)
-                return NotFound();
+            var income = await _service.GetIncomeById(id, userId.Value);
+            if (income == null) return NotFound();
 
             return Ok(income);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateIncome([FromRoute] int id, [FromBody] UpdateIncomeDTO dto)
+        public async Task<IActionResult> UpdateIncome(int id, [FromBody] UpdateIncomeDTO dto)
         {
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdStr == null) return Unauthorized();
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
 
-            var userId = Guid.Parse(userIdStr);
-
-            var income = await _context.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id && i.UserId == userId);
-            if (income == null) return NotFound();
-
-            income.IncomeSource = dto.IncomeSource;
-            income.Amount = dto.Amount;
-            income.CurrencyId = dto.CurrencyId;
-            income.FrequencyId = dto.FrequencyId;
-            income.UpdatedAt = DateTime.UtcNow;
-            income.UpdatedBy = userId;
-
-            await _context.SaveChangesAsync();
+            var success = await _service.UpdateIncome(id, dto, userId.Value);
+            if (!success) return NotFound();
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteIncome([FromRoute] int id)
+        public async Task<IActionResult> DeleteIncome(int id)
         {
-            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userIdStr == null) return Unauthorized();
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
 
-            var userId = Guid.Parse(userIdStr);
-
-            var income = await _context.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id && i.UserId == userId);
-            if (income == null)
-                return NotFound();
-
-            _context.Incomes.Remove(income);
-            await _context.SaveChangesAsync();
+            var success = await _service.DeleteIncome(id, userId.Value);
+            if (!success) return NotFound();
 
             return NoContent();
+        }
+
+        private Guid? GetUserId()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return Guid.TryParse(userIdStr, out var guid) ? guid : null;
         }
     }
 }

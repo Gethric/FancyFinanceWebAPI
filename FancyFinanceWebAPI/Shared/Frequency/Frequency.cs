@@ -12,7 +12,7 @@ namespace FancyFinanceWebAPI.Shared.Frequency
 
         [Required]
         [Column("frequency_name")]
-        public string FrequencyName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

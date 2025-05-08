@@ -34,6 +34,7 @@ namespace FancyFinanceWebAPI.Modules.Users
             user.Id = Guid.NewGuid();
             user.Password = _passwordHasher.HashPassword(user, user.Password);
             user.IsActive = true;
+            user.IsAdmin = false;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -90,7 +91,8 @@ namespace FancyFinanceWebAPI.Modules.Users
                 username = user.Username,
                 firstName = user.FirstName,
                 lastName = user.LastName,
-                isActive = user.IsActive
+                isActive = user.IsActive,
+                isAdmin = user.IsAdmin
             });
         }
 

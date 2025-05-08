@@ -1,6 +1,6 @@
 ﻿namespace FancyFinanceWebAPI.Modules.Expenses
 {
-    public class CreateExpenseDTO
+    public class UpdateExpenseDTO
     {
         public string Description { get; set; } = string.Empty;
         public decimal Amount { get; set; }

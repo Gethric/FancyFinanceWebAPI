@@ -12,7 +12,7 @@ namespace FancyFinanceWebAPI.Shared.Category
 
         [Required]
         [Column("category_name")]
-        public string CategoryName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
