@@ -21,7 +21,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(
+                  "http://localhost:3000",
+                  "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -55,6 +57,13 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+var dbCheck = new Npgsql.NpgsqlConnectionStringBuilder(
+    builder.Configuration.GetConnectionString("DefaultConnection"));
+
+Console.WriteLine(
+    $"DB CHECK: Host={dbCheck.Host}; Port={dbCheck.Port}; " +
+    $"Database={dbCheck.Database}; Username={dbCheck.Username}");
 
 // Register PostgreSQL DbContext
 builder.Services.AddDbContext<FancyFinanceDbContext>(options =>

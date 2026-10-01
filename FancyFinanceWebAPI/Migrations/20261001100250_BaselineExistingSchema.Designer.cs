@@ -3,6 +3,7 @@ using System;
 using FancyFinanceWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FancyFinanceWebAPI.Migrations
 {
     [DbContext(typeof(FancyFinanceDbContext))]
-    partial class FancyFinanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261001100250_BaselineExistingSchema")]
+    partial class BaselineExistingSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,72 +24,6 @@ namespace FancyFinanceWebAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("FancyFinanceWebAPI.Modules.Accounts.Account", b =>
-                {
-                    b.Property<int>("AccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("account_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AccountId"));
-
-                    b.Property<string>("AccountName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("account_name");
-
-                    b.Property<string>("AccountType")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("account_type");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid")
-                        .HasColumnName("created_by");
-
-                    b.Property<int>("CurrencyId")
-                        .HasColumnType("integer")
-                        .HasColumnName("currency_id");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<decimal>("OpeningBalance")
-                        .HasColumnType("numeric(18,2)")
-                        .HasColumnName("opening_balance");
-
-                    b.Property<DateOnly>("OpeningBalanceDate")
-                        .HasColumnType("date")
-                        .HasColumnName("opening_balance_date");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uuid")
-                        .HasColumnName("updated_by");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("AccountId");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("accounts");
-                });
 
             modelBuilder.Entity("FancyFinanceWebAPI.Modules.Expenses.Expense", b =>
                 {
@@ -206,73 +143,6 @@ namespace FancyFinanceWebAPI.Migrations
                         .HasName("incomes_pkey");
 
                     b.ToTable("incomes");
-                });
-
-            modelBuilder.Entity("FancyFinanceWebAPI.Modules.Transactions.Transaction", b =>
-                {
-                    b.Property<int>("TransactionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("transaction_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TransactionId"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("integer")
-                        .HasColumnName("account_id");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric(18,2)")
-                        .HasColumnName("amount");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("category_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid")
-                        .HasColumnName("created_by");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("integer")
-                        .HasColumnName("sequence");
-
-                    b.Property<decimal?>("StatementBalance")
-                        .HasColumnType("numeric(18,2)")
-                        .HasColumnName("statement_balance");
-
-                    b.Property<DateOnly>("TransactionDate")
-                        .HasColumnType("date")
-                        .HasColumnName("transaction_date");
-
-                    b.Property<TimeOnly?>("TransactionTime")
-                        .HasColumnType("time without time zone")
-                        .HasColumnName("transaction_time");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uuid")
-                        .HasColumnName("updated_by");
-
-                    b.HasKey("TransactionId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("AccountId", "TransactionDate", "Sequence");
-
-                    b.ToTable("transactions");
                 });
 
             modelBuilder.Entity("FancyFinanceWebAPI.Modules.Users.User", b =>
@@ -479,25 +349,6 @@ namespace FancyFinanceWebAPI.Migrations
                     b.ToTable("frequencies");
                 });
 
-            modelBuilder.Entity("FancyFinanceWebAPI.Modules.Accounts.Account", b =>
-                {
-                    b.HasOne("FancyFinanceWebAPI.Shared.Currency.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FancyFinanceWebAPI.Modules.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Currency");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FancyFinanceWebAPI.Modules.Expenses.Expense", b =>
                 {
                     b.HasOne("FancyFinanceWebAPI.Shared.Category.Category", "Category")
@@ -589,25 +440,6 @@ namespace FancyFinanceWebAPI.Migrations
                     b.Navigation("Frequency");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FancyFinanceWebAPI.Modules.Transactions.Transaction", b =>
-                {
-                    b.HasOne("FancyFinanceWebAPI.Modules.Accounts.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FancyFinanceWebAPI.Shared.Category.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("FancyFinanceWebAPI.Shared.Category.Category", b =>

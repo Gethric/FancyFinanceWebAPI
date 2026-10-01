@@ -51,13 +51,13 @@ namespace FancyFinanceWebAPI.Modules.Expenses
         public Frequency? Frequency { get; set; }
 
         [Column("created_at")]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Column("created_by")]
         public Guid? CreatedBy { get; set; }
 
         [Column("updated_at")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
 
         [Column("updated_by")]
         public Guid? UpdatedBy { get; set; }
