@@ -7,6 +7,7 @@ using FancyFinanceWebAPI.Modules.Transactions;
 using FancyFinanceWebAPI.Shared.Category;
 using FancyFinanceWebAPI.Shared.Currency;
 using FancyFinanceWebAPI.Shared.Frequency;
+using FancyFinanceWebAPI.Modules.Transactions.Import;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -30,6 +31,7 @@ namespace FancyFinanceWebAPI.Data
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<StatementImport> StatementImports { get; set; }
 
         protected override void ConfigureConventions(
             ModelConfigurationBuilder configurationBuilder)
@@ -45,6 +47,21 @@ namespace FancyFinanceWebAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<StatementImport>(entity =>
+            {
+                entity.HasOne(x => x.Account)
+                    .WithMany()
+                    .HasForeignKey(x => x.AccountId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(x => new
+                {
+                    x.AccountId,
+                    x.FileHash
+                })
+                .IsUnique();
+            });
 
             modelBuilder.Entity<User>()
                 .Property<bool>("IsAdmin")

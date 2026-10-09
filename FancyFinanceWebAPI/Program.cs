@@ -104,6 +104,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddDataProtection();
+builder.Services.AddScoped<FancyFinanceWebAPI.Modules.Transactions.Import.CoOpStatementParser>();
 
 var app = builder.Build();
 
